@@ -9,4 +9,9 @@ dependencies = [
     "google-genai>=1.0.0",
     "python-dotenv>=1.0.0",
     "aiohttp>=3.13.5",
+    "openai>=2.32.0",
+    "rapidfuzz>=3.14.5",
+    "google-api-python-client>=2.170.0",
+    "google-auth-httplib2>=0.2.0",
+    "google-auth-oauthlib>=1.2.2",
 ]

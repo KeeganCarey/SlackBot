@@ -1,0 +1,11 @@
+id,title,client,date,start_time,duration_hours,type
+1,Oakley Rebrand — Final Review,Oakley Sports,2026-04-25,10:00,1.5,Client Call
+2,Sunrise Café — Logo Presentation,Sunrise Café,2026-04-25,14:00,1.0,Client Call
+3,Porter & Co — Kickoff Call,Porter & Co,2026-04-28,11:00,1.0,Client Call
+4,Bloom Wellness — Discovery Workshop,Bloom Wellness,2026-04-29,13:00,2.0,Workshop
+5,Admin & Invoicing Block,Internal,2026-04-28,09:00,2.0,Admin
+6,Oakley Rebrand — Asset Handoff,Oakley Sports,2026-04-30,15:00,1.0,Client Call
+7,Porter & Co — Wireframe Review,Porter & Co,2026-05-01,10:00,1.5,Client Call
+8,Bloom Wellness — Moodboard Review,Bloom Wellness,2026-05-02,14:00,1.0,Client Call
+9,Sunrise Café — Final Delivery,Sunrise Café,2026-04-30,11:00,1.0,Client Call
+10,Business Development Block,Internal,2026-05-01,09:00,3.0,Admin

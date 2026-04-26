@@ -1,0 +1,585 @@
+{
+  "version": 3,
+  "fingerprint": "0196b93e290835134d1e19c0bc79df69dd2c082994a7e907c5fd382eabf902ff",
+  "tables": [
+    {
+      "name": "employee_list",
+      "path": "C:\\Users\\radio\\Documents\\Python\\Projects\\SlackBot\\mock_data\\employee_list.csv",
+      "columns": [
+        "Name",
+        "Employee Type",
+        "Bill Rate",
+        "Capacity"
+      ],
+      "column_types": {
+        "Name": "string",
+        "Employee Type": "string",
+        "Bill Rate": "number",
+        "Capacity": "number"
+      },
+      "numeric_columns": [
+        "Bill Rate",
+        "Capacity"
+      ],
+      "date_columns": [],
+      "sample_rows": [
+        {
+          "Name": "Ariana Wolf",
+          "Employee Type": "Core Staff",
+          "Bill Rate": "250",
+          "Capacity": "60%"
+        },
+        {
+          "Name": "Matt Meickle",
+          "Employee Type": "Core Staff",
+          "Bill Rate": "175",
+          "Capacity": "85%"
+        },
+        {
+          "Name": "Katrina McHugh",
+          "Employee Type": "Core Staff",
+          "Bill Rate": "175",
+          "Capacity": "75%"
+        }
+      ],
+      "row_count_estimate": 9
+    },
+    {
+      "name": "project",
+      "path": "C:\\Users\\radio\\Documents\\Python\\Projects\\SlackBot\\mock_data\\project.csv",
+      "columns": [
+        "Project",
+        "Client",
+        "Service",
+        "Total Hours Budget",
+        "Project Start Date",
+        "Project End Date",
+        "Budget"
+      ],
+      "column_types": {
+        "Project": "string",
+        "Client": "string",
+        "Service": "string",
+        "Total Hours Budget": "number",
+        "Project Start Date": "date",
+        "Project End Date": "date",
+        "Budget": "number"
+      },
+      "numeric_columns": [
+        "Total Hours Budget",
+        "Budget"
+      ],
+      "date_columns": [
+        "Project Start Date",
+        "Project End Date"
+      ],
+      "sample_rows": [
+        {
+          "Project": "Alameda Health System-Business Development/Executive Coaching",
+          "Client": "Alameda Health System",
+          "Service": "Business Development/Executive Coaching",
+          "Total Hours Budget": "70",
+          "Project Start Date": "2/23/2026",
+          "Project End Date": "6/7/2026",
+          "Budget": "$16,500"
+        },
+        {
+          "Project": "Alameda Health System-Facilitation",
+          "Client": "Alameda Health System",
+          "Service": "Facilitation",
+          "Total Hours Budget": "50",
+          "Project Start Date": "4/1/2026",
+          "Project End Date": "4/14/2026",
+          "Budget": "$8,500"
+        },
+        {
+          "Project": "Alameda Health System-Visual Brand Identity",
+          "Client": "Alameda Health System",
+          "Service": "Visual Brand Identity",
+          "Total Hours Budget": "235",
+          "Project Start Date": "3/16/2026",
+          "Project End Date": "5/31/2026",
+          "Budget": "$38,500"
+        }
+      ],
+      "row_count_estimate": 190
+    },
+    {
+      "name": "schedule",
+      "path": "C:\\Users\\radio\\Documents\\Python\\Projects\\SlackBot\\mock_data\\schedule.csv",
+      "columns": [
+        "Employee Name",
+        "Client",
+        "Project",
+        "Service",
+        "Start Date",
+        "End Date",
+        "Start Time",
+        "End Time",
+        "Number of hours",
+        "Amount"
+      ],
+      "column_types": {
+        "Employee Name": "string",
+        "Client": "string",
+        "Project": "string",
+        "Service": "string",
+        "Start Date": "date",
+        "End Date": "date",
+        "Start Time": "date",
+        "End Time": "date",
+        "Number of hours": "number",
+        "Amount": "number"
+      },
+      "numeric_columns": [
+        "Number of hours",
+        "Amount"
+      ],
+      "date_columns": [
+        "Start Date",
+        "End Date",
+        "Start Time",
+        "End Time"
+      ],
+      "sample_rows": [
+        {
+          "Employee Name": "Ariana Wolf",
+          "Client": "Alameda Health System",
+          "Project": "Alameda Health System-Visual Brand Identity",
+          "Service": "Visual Brand Identity",
+          "Start Date": "4/27/26",
+          "End Date": "4/27/26",
+          "Start Time": "9:00:00 AM",
+          "End Time": "12:30:00 PM",
+          "Number of hours": "3.5",
+          "Amount": "875"
+        },
+        {
+          "Employee Name": "Brittany Luby",
+          "Client": "A5 Meat",
+          "Project": "A5 Meat-Marketing Assets",
+          "Service": "Marketing Assets",
+          "Start Date": "4/27/26",
+          "End Date": "4/27/26",
+          "Start Time": "9:00:00 AM",
+          "End Time": "12:30:00 PM",
+          "Number of hours": "3.5",
+          "Amount": "525"
+        },
+        {
+          "Employee Name": "Eliza Auseillo",
+          "Client": "A5 Meat",
+          "Project": "A5 Meat-Website Design",
+          "Service": "Website Design",
+          "Start Date": "4/27/26",
+          "End Date": "4/27/26",
+          "Start Time": "9:00:00 AM",
+          "End Time": "11:00:00 AM",
+          "Number of hours": "2",
+          "Amount": "200"
+        }
+      ],
+      "row_count_estimate": 200
+    }
+  ],
+  "core_tools": [
+    {
+      "name": "list_tables",
+      "description": "List all available CSV tables and key metadata.",
+      "args": []
+    },
+    {
+      "name": "describe_table",
+      "description": "Describe schema for one table. Table must be one of: employee_list, project, schedule",
+      "args": [
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table name"
+        }
+      ]
+    },
+    {
+      "name": "query_table",
+      "description": "Query rows from a table with optional filters/sorting/column selection.",
+      "args": [
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table name"
+        },
+        {
+          "name": "filters_json",
+          "type": "string",
+          "description": "JSON object mapping column names to values, e.g. {\"Client\":\"Acme\"}"
+        },
+        {
+          "name": "select_columns_csv",
+          "type": "string",
+          "description": "Comma-separated columns to return"
+        },
+        {
+          "name": "sort_by",
+          "type": "string",
+          "description": "Sort column"
+        },
+        {
+          "name": "sort_order",
+          "type": "string",
+          "description": "asc or desc"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Max rows (default 25, max 200)"
+        }
+      ]
+    },
+    {
+      "name": "aggregate_table",
+      "description": "Compute aggregate over a table (min/max/sum/avg/median/mode/count/distinct_count). Use this for lowest/highest/most/least questions instead of returning full rows.",
+      "args": [
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table name"
+        },
+        {
+          "name": "aggregate_function",
+          "type": "string",
+          "description": "min|max|sum|avg|median|mode|count|distinct_count"
+        },
+        {
+          "name": "aggregate_column",
+          "type": "string",
+          "description": "Column for aggregate; optional for count. Numeric-like text values (e.g. $12,500, 60%) are supported."
+        },
+        {
+          "name": "filters_json",
+          "type": "string",
+          "description": "JSON object mapping column names to values, e.g. {\"Client\":\"Acme\"}"
+        }
+      ]
+    },
+    {
+      "name": "group_aggregate_table",
+      "description": "Group by one column and aggregate each group.",
+      "args": [
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table name"
+        },
+        {
+          "name": "group_by",
+          "type": "string",
+          "description": "Group by column"
+        },
+        {
+          "name": "aggregate_function",
+          "type": "string",
+          "description": "min|max|sum|avg|median|mode|count|distinct_count"
+        },
+        {
+          "name": "aggregate_column",
+          "type": "string",
+          "description": "Aggregate column; optional for count"
+        },
+        {
+          "name": "filters_json",
+          "type": "string",
+          "description": "JSON object mapping column names to values, e.g. {\"Client\":\"Acme\"}"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Max groups (default 25, max 200)"
+        }
+      ]
+    },
+    {
+      "name": "message_workspace_user",
+      "description": "Send a direct message to a workspace user by fuzzy-matching their name.",
+      "args": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Target user's name (real or display name)"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "description": "Message body to send"
+        },
+        {
+          "name": "min_match_score",
+          "type": "number",
+          "description": "Optional fuzzy match score threshold 0-100 (default 70)"
+        }
+      ]
+    },
+    {
+      "name": "create_calendar_event",
+      "description": "Create a Google Calendar event in the configured account/calendar.",
+      "args": [
+        {
+          "name": "summary",
+          "type": "string",
+          "description": "Event title"
+        },
+        {
+          "name": "start_datetime",
+          "type": "string",
+          "description": "RFC3339 datetime, e.g. 2026-05-01T09:00:00"
+        },
+        {
+          "name": "end_datetime",
+          "type": "string",
+          "description": "RFC3339 datetime, e.g. 2026-05-01T10:00:00"
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "description": "IANA timezone, e.g. America/Los_Angeles"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "Optional event description"
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "description": "Optional location"
+        },
+        {
+          "name": "attendees_csv",
+          "type": "string",
+          "description": "Optional comma-separated attendee emails"
+        },
+        {
+          "name": "calendar_id",
+          "type": "string",
+          "description": "Optional calendar ID (default primary)"
+        },
+        {
+          "name": "send_updates",
+          "type": "string",
+          "description": "Optional all|externalOnly|none (default none)"
+        }
+      ]
+    }
+  ],
+  "inferred_tools": [
+    {
+      "name": "employee_utilization",
+      "description": "Summarize scheduled hours per employee, optionally within a date range.",
+      "args": [
+        {
+          "name": "employee_name",
+          "type": "string",
+          "description": "Optional employee filter"
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "description": "Optional start date"
+        },
+        {
+          "name": "end_date",
+          "type": "string",
+          "description": "Optional end date"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Max rows"
+        }
+      ],
+      "plan": {
+        "steps": [
+          {
+            "op": "load_table",
+            "table": "schedule"
+          },
+          {
+            "op": "apply_arg_filters",
+            "mappings": [
+              {
+                "arg": "employee_name",
+                "column": "Employee Name"
+              },
+              {
+                "arg": "start_date",
+                "column": "Start Date",
+                "comparator": "gte"
+              },
+              {
+                "arg": "end_date",
+                "column": "End Date",
+                "comparator": "lte"
+              }
+            ]
+          },
+          {
+            "op": "group_aggregate",
+            "group_by": "Employee Name",
+            "aggregate_function": "sum",
+            "aggregate_column": "Number of hours"
+          },
+          {
+            "op": "sort",
+            "by": "aggregate_value",
+            "order": "desc"
+          },
+          {
+            "op": "top_n",
+            "arg": "limit",
+            "default": 25,
+            "max": 200
+          }
+        ]
+      }
+    },
+    {
+      "name": "overbooked_employees",
+      "description": "Find employees whose scheduled hours exceed a threshold over filtered rows.",
+      "args": [
+        {
+          "name": "threshold_hours",
+          "type": "number",
+          "description": "Minimum total hours (default 8)"
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "description": "Optional exact Start Date filter"
+        }
+      ],
+      "plan": {
+        "steps": [
+          {
+            "op": "load_table",
+            "table": "schedule"
+          },
+          {
+            "op": "apply_arg_filters",
+            "mappings": [
+              {
+                "arg": "date",
+                "column": "Start Date"
+              }
+            ]
+          },
+          {
+            "op": "group_aggregate",
+            "group_by": "Employee Name",
+            "aggregate_function": "sum",
+            "aggregate_column": "Number of hours"
+          },
+          {
+            "op": "filter_result",
+            "column": "aggregate_value",
+            "comparator": "gt",
+            "arg": "threshold_hours",
+            "default": 8
+          },
+          {
+            "op": "sort",
+            "by": "aggregate_value",
+            "order": "desc"
+          }
+        ]
+      }
+    },
+    {
+      "name": "project_budget_vs_scheduled",
+      "description": "Compare scheduled hours/amount against project budget by project.",
+      "args": [
+        {
+          "name": "project_contains",
+          "type": "string",
+          "description": "Optional project name contains"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Max rows"
+        }
+      ],
+      "plan": {
+        "steps": [
+          {
+            "op": "load_table",
+            "table": "schedule",
+            "as": "schedule"
+          },
+          {
+            "op": "apply_arg_filters",
+            "table_alias": "schedule",
+            "mappings": [
+              {
+                "arg": "project_contains",
+                "column": "Project"
+              }
+            ]
+          },
+          {
+            "op": "group_aggregate",
+            "table_alias": "schedule",
+            "group_by": "Project",
+            "aggregate_function": "sum",
+            "aggregate_column": "Number of hours",
+            "as": "hours"
+          },
+          {
+            "op": "group_aggregate",
+            "table_alias": "schedule",
+            "group_by": "Project",
+            "aggregate_function": "sum",
+            "aggregate_column": "Amount",
+            "as": "amount"
+          },
+          {
+            "op": "load_table",
+            "table": "project",
+            "as": "project"
+          },
+          {
+            "op": "join",
+            "left": "hours",
+            "right": "project",
+            "left_on": "group",
+            "right_on": "Project",
+            "as": "joined"
+          },
+          {
+            "op": "join",
+            "left": "joined",
+            "right": "amount",
+            "left_on": "group",
+            "right_on": "group",
+            "as": "joined2"
+          },
+          {
+            "op": "project_columns",
+            "table_alias": "joined2",
+            "columns": [
+              "group",
+              "aggregate_value",
+              "aggregate_value_right",
+              "Budget",
+              "Total Hours Budget"
+            ]
+          },
+          {
+            "op": "top_n",
+            "arg": "limit",
+            "default": 25,
+            "max": 200
+          }
+        ]
+      }
+    }
+  ]
+}

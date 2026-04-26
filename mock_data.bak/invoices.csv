@@ -1,0 +1,6 @@
+id,invoice_number,client,project,amount_usd,status,issue_date,due_date
+1,INV-039,Oakley Sports,Oakley Sports Rebrand,4000,Paid,2026-03-20,2026-03-30
+2,INV-040,Nova Tech,Nova Tech Pitch Deck,2800,Paid,2026-04-10,2026-04-20
+3,INV-041,Sunrise Café,Sunrise Café Brand Identity,1800,Pending,2026-04-18,2026-04-28
+4,INV-042,Porter & Co,Porter & Co Website Redesign,3200,Overdue,2026-04-01,2026-04-11
+5,INV-043,Bloom Wellness,Bloom Wellness Full Brand,1500,Pending,2026-04-20,2026-05-05
