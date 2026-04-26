@@ -18,6 +18,7 @@ from app.data.schema_introspect import (
 
 SAFE_NAME_RE = re.compile(r"^[a-z_][a-z0-9_]{2,63}$")
 MAX_INFERRED_TOOLS = 5
+REGENERATE_ON_FINGERPRINT_MISMATCH_ENV = "TOOL_MANIFEST_REGENERATE_ON_FINGERPRINT_MISMATCH"
 REQUIRED_CORE_TOOL_NAMES = {
     "list_tables",
     "describe_table",
@@ -27,6 +28,13 @@ REQUIRED_CORE_TOOL_NAMES = {
     "message_workspace_user",
     "create_calendar_event",
 }
+
+
+def _env_true(name: str, default: bool = False) -> bool:
+    raw = (os.environ.get(name) or "").strip().lower()
+    if raw == "":
+        return default
+    return raw in {"1", "true", "yes", "on"}
 
 
 def _make_core_tool_specs(tables: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -288,7 +296,6 @@ def _infer_with_model(tables: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 {"role": "system", "content": "Return valid JSON only."},
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.1,
             response_format={"type": "json_object"},
         )
         raw = response.choices[0].message.content or "{}"
@@ -357,14 +364,18 @@ def _is_manifest_valid(manifest: dict[str, Any]) -> bool:
 def load_or_generate_manifest() -> dict[str, Any]:
     csv_paths = discover_csv_tables(DATA_DIR)
     current_fingerprint = build_fingerprint(csv_paths)
+    regenerate_on_mismatch = _env_true(REGENERATE_ON_FINGERPRINT_MISMATCH_ENV, default=False)
 
     if MANIFEST_PATH.exists():
         try:
             raw = MANIFEST_PATH.read_text(encoding="utf-8").strip()
             if raw:
                 manifest = json.loads(raw)
-                if _is_manifest_valid(manifest) and manifest.get("fingerprint") == current_fingerprint:
-                    return manifest
+                if _is_manifest_valid(manifest):
+                    if manifest.get("fingerprint") == current_fingerprint:
+                        return manifest
+                    if not regenerate_on_mismatch:
+                        return manifest
         except Exception as exc:
             print(f"[manifest] failed to load existing manifest: {exc}")
 

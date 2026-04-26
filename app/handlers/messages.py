@@ -19,6 +19,20 @@ NATIVE_STREAM_FLUSH_INTERVAL = float(os.environ.get("SLACK_NATIVE_STREAM_FLUSH_I
 NATIVE_STREAM_MIN_CHARS = int(os.environ.get("SLACK_NATIVE_STREAM_MIN_CHARS", "18"))
 
 
+def _env_true(name: str, default: bool = False) -> bool:
+    raw = (os.environ.get(name) or "").strip().lower()
+    if raw == "":
+        return default
+    return raw in {"1", "true", "yes", "on"}
+
+
+# Keep backward compatibility with older key names.
+SLACK_SHOW_TOOL_DEBUG = _env_true(
+    "SLACK_SHOW_TOOL_DEBUG",
+    default=_env_true("SLACK_SHOW_TOOL_CALLS", default=True),
+)
+
+
 def _thread_key(channel: str, thread_ts: str | None) -> str:
     return f"{channel}:{thread_ts or 'root'}"
 
@@ -113,6 +127,7 @@ async def _handle_message(event: dict, say, client) -> None:
     accumulated = ""
     chunk_start = 0
     tool_log: list[str] = []
+    data_sources: list[str] = []
     loop = asyncio.get_running_loop()
 
     use_native_streaming = SLACK_USE_NATIVE_STREAMING
@@ -124,10 +139,12 @@ async def _handle_message(event: dict, say, client) -> None:
 
     def _compose(answer_text: str, include_tools: bool) -> str:
         tool_text = "\n".join(tool_log) if include_tools and tool_log else ""
-        if tool_text and answer_text:
+        if tool_text and answer_text and SLACK_SHOW_TOOL_DEBUG:
             text = f"{tool_text}\n\n{answer_text}"
+        elif tool_text and SLACK_SHOW_TOOL_DEBUG:
+            text = tool_text
         else:
-            text = tool_text or answer_text
+            text = answer_text
         return text[:SLACK_MAX_CHARS]
 
     async def _fallback_render(text: str, *, force: bool = False) -> None:
@@ -219,6 +236,8 @@ async def _handle_message(event: dict, say, client) -> None:
     async def on_tool_call(name: str, filters: dict | None, result_count: int) -> None:
         f = f" `{filters}`" if filters else ""
         tool_log.append(f"_{name}{f} - {result_count} rows_")
+        if name not in data_sources:
+            data_sources.append(name)
         await _render(_compose(accumulated[chunk_start:], include_tools=True), force=True)
 
     try:
@@ -274,3 +293,6 @@ async def _handle_message(event: dict, say, client) -> None:
         await _stop_stream_if_needed()
         if final_text and final_text != last_sent_text and msg_ts:
             await client.chat_update(channel=channel, ts=msg_ts, text=final_text, blocks=[])
+
+    # Keep streamed text as the canonical final output; no end-of-response
+    # formatting rewrite.
