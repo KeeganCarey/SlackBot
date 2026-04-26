@@ -1,0 +1,11 @@
+[project]
+name = "flight-design-ai"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "jinja2",
+    "python-multipart",
+    "google-generativeai",
+]

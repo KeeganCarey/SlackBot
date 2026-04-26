@@ -1,0 +1,486 @@
+<style>
+/* ── Shared component styles ───────────────────────────────────────────────── */
+.kpi-card {
+  background:white; border-radius:14px; padding:18px 20px;
+  border:1px solid #e8ecf4; box-shadow:0 2px 12px rgba(0,0,0,0.04);
+}
+.section-title {
+  font-size:12px; font-weight:700; color:#0f172a; margin:0 0 2px;
+  letter-spacing:-0.01em;
+}
+.section-sub {
+  font-size:11px; color:#94a3b8; margin:0;
+}
+.mini-bar-track {
+  height:5px; border-radius:3px; background:#e8ecf4; overflow:hidden; flex-shrink:0;
+}
+.mini-bar-fill {
+  height:100%; border-radius:3px;
+  background: linear-gradient(90deg,#6366f1,#8b5cf6);
+}
+.status-pill {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 8px; border-radius:20px; font-size:10px; font-weight:700;
+}
+.tbl { width:100%; border-collapse:separate; border-spacing:0; }
+.tbl th {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.07em; color:#94a3b8; padding:9px 14px;
+  background:#f8fafc; white-space:nowrap;
+}
+.tbl th:first-child { border-radius:8px 0 0 8px; }
+.tbl th:last-child  { border-radius:0 8px 8px 0; }
+.tbl td { padding:10px 14px; font-size:12px; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.tbl tr:hover td { background:#fafbff; }
+.progress-track {
+  width:80px; height:6px; border-radius:4px; background:#e8ecf4; overflow:hidden; display:inline-block;
+}
+</style>
+
+<!-- ── AI Morning Brief ──────────────────────────────────────────────────────── -->
+{% include "partials/_filter_bar.html" %}
+<div style="border-radius:16px;padding:18px 22px;margin-bottom:20px;
+            background:linear-gradient(135deg,#1e1b4b,#312e81,#1e1b4b);
+            border:1px solid rgba(167,139,250,0.2);
+            box-shadow:0 6px 28px rgba(79,70,229,0.2);
+            display:flex;gap:14px;align-items:flex-start;position:relative;overflow:hidden">
+  <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;
+              background:rgba(139,92,246,0.08);pointer-events:none"></div>
+  <div style="width:40px;height:40px;border-radius:12px;flex-shrink:0;
+              background:rgba(139,92,246,0.25);border:1px solid rgba(167,139,250,0.3);
+              display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+  <div style="position:relative;z-index:1">
+    <p style="font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:0.1em;
+              text-transform:uppercase;margin:0 0 5px">✦ AI Morning Brief</p>
+    <p style="font-size:13px;color:#e2e8f0;line-height:1.7;margin:0">{{ alert }}</p>
+  </div>
+</div>
+
+<!-- ── Executive Health + Signals ───────────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:210px 1fr 1fr;gap:14px;margin-bottom:20px">
+
+  <!-- Health Score -->
+  <div class="kpi-card" style="display:flex;flex-direction:column;align-items:center;
+                                justify-content:center;text-align:center;
+                                border-top:3px solid {{ health.color }}">
+    <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;
+              letter-spacing:0.08em;margin:0 0 10px">Studio Health</p>
+    <div style="font-size:52px;font-weight:900;color:{{ health.color }};line-height:1">
+      {{ health.score }}
+    </div>
+    <div style="font-size:13px;color:#94a3b8;margin-bottom:12px">/ 100</div>
+    <div style="background:{{ health.bg }};color:{{ health.color }};
+                padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700">
+      {{ health.label }}
+    </div>
+    <div style="width:100%;height:5px;background:#e8ecf4;border-radius:3px;margin-top:14px;overflow:hidden">
+      <div style="height:100%;width:{{ health.score }}%;background:{{ health.color }};
+                  border-radius:3px;transition:width 0.8s ease"></div>
+    </div>
+  </div>
+
+  <!-- What's Working -->
+  <div class="kpi-card" style="border-left:3px solid #22c55e">
+    <p style="font-size:10px;font-weight:700;color:#16a34a;text-transform:uppercase;
+              letter-spacing:0.07em;margin:0 0 12px">✅ What's Working</p>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      {% for item in health.good %}
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <span style="color:#22c55e;font-size:11px;flex-shrink:0;margin-top:1px">→</span>
+        <p style="font-size:12px;color:#374151;margin:0;line-height:1.5">{{ item }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Watch Items -->
+  <div class="kpi-card" style="border-left:3px solid #f59e0b">
+    <p style="font-size:10px;font-weight:700;color:#d97706;text-transform:uppercase;
+              letter-spacing:0.07em;margin:0 0 12px">⚠️ Watch These</p>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      {% for item in health.watch %}
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <span style="color:#f59e0b;font-size:11px;flex-shrink:0;margin-top:1px">→</span>
+        <p style="font-size:12px;color:#374151;margin:0;line-height:1.5">{{ item }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- ── KPI Strip ─────────────────────────────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+
+  {% set kpis = [
+    ("💰", "Total Billed", "${:,.0f}".format(stats.total_revenue), period_label),
+    ("⚡", "Blended Rate",  "$" ~ blended_rate ~ "/hr", "avg across all 8 staff"),
+    ("📊", "Team Utilization", avg_utilization ~ "%", "of contracted hours, avg"),
+    ("📁", "Projects Scheduled", stats.total_projects ~ "", "with hours logged this period"),
+  ] %}
+  {% for icon, label, value, sub in kpis %}
+  <div class="kpi-card" style="display:flex;gap:12px;align-items:center">
+    <div style="width:40px;height:40px;border-radius:11px;flex-shrink:0;
+                background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+                display:flex;align-items:center;justify-content:center;font-size:18px">{{ icon }}</div>
+    <div>
+      <p style="font-size:10px;font-weight:600;color:#94a3b8;text-transform:uppercase;
+                letter-spacing:0.06em;margin:0 0 2px">{{ label }}</p>
+      <p style="font-size:20px;font-weight:800;color:#0f172a;margin:0;line-height:1.1">{{ value }}</p>
+      <p style="font-size:10px;color:#94a3b8;margin:2px 0 0">{{ sub }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- ── Revenue Trend + Employee Revenue ──────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-bottom:20px">
+
+  <!-- Revenue Trend -->
+  <div class="kpi-card" style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <p class="section-title">Weekly Billed Revenue</p>
+        <p class="section-sub">
+          ${{ "{:,.0f}".format(weekly_trend["avg"]) }}/wk average &nbsp;·&nbsp;
+          low ${{ "{:,.0f}".format(weekly_trend["values"] | min) }} &nbsp;·&nbsp;
+          high ${{ "{:,.0f}".format(weekly_trend["values"] | max) }}
+        </p>
+      </div>
+      <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;
+                   background:#ede9fe;color:#7c3aed">{{ active_preset }}</span>
+    </div>
+    <div style="height:175px;position:relative"><canvas id="revTrendChart"></canvas></div>
+  </div>
+
+  <!-- Revenue by Employee -->
+  <div class="kpi-card" style="padding:20px">
+    <p class="section-title" style="margin-bottom:4px">Revenue by Team Member</p>
+    <p class="section-sub" style="margin-bottom:14px">Billable output this period</p>
+    <div style="height:175px;position:relative"><canvas id="revEmpChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ── Top Clients + Service Mix ─────────────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-bottom:20px">
+
+  <!-- Top Clients -->
+  <div class="kpi-card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;
+                display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <p class="section-title">Top Clients by Revenue</p>
+        <p class="section-sub">{{ rev_by_client | length }} active clients this period</p>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th style="text-align:left">Client</th>
+          <th style="text-align:right">Billed</th>
+          <th style="text-align:left;min-width:100px">Share</th>
+          <th style="text-align:center">Proj</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in rev_by_client %}
+        <tr>
+          <td style="font-weight:600;color:#0f172a;max-width:160px">
+            <span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px"
+                  title="{{ c.client }}">{{ c.client }}</span>
+          </td>
+          <td style="text-align:right;font-weight:700;color:#0f172a;white-space:nowrap">
+            ${{ "{:,.0f}".format(c.revenue) }}
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div class="mini-bar-track" style="width:60px">
+                <div class="mini-bar-fill" style="width:{{ c.pct }}%"></div>
+              </div>
+              <span style="font-size:10px;color:#64748b;white-space:nowrap">{{ c.pct }}%</span>
+            </div>
+          </td>
+          <td style="text-align:center;color:#64748b">{{ c.projects }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Service Mix -->
+  <div class="kpi-card" style="padding:20px">
+    <p class="section-title" style="margin-bottom:2px">Service Mix</p>
+    <p class="section-sub" style="margin-bottom:16px">Revenue concentration by service type</p>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      {% for svc in rev_by_service %}
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:600;color:#0f172a;
+                       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px"
+                title="{{ svc.service }}">{{ svc.service }}</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;margin-left:8px">
+            <span style="font-size:10px;color:#94a3b8">${{ "{:,.0f}".format(svc.revenue) }}</span>
+            <span style="font-size:10px;font-weight:700;color:#6366f1;
+                         min-width:32px;text-align:right">{{ svc.pct }}%</span>
+          </div>
+        </div>
+        <div style="height:5px;border-radius:4px;background:#e8ecf4;overflow:hidden">
+          <div style="height:100%;border-radius:4px;
+                      width:{{ svc.pct }}%;
+                      background:{% if svc.pct > 40 %}linear-gradient(90deg,#f59e0b,#ef4444)
+                                 {% elif svc.pct > 20 %}linear-gradient(90deg,#6366f1,#8b5cf6)
+                                 {% else %}linear-gradient(90deg,#8b5cf6,#a78bfa){% endif %}">
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- ── Capacity Health Strip ──────────────────────────────────────────────────── -->
+<div class="kpi-card" style="padding:0;overflow:hidden;margin-bottom:20px">
+  <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;
+              display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <p class="section-title">Team Capacity At-a-Glance</p>
+      <p class="section-sub">Contracted weekly hours vs actual average — flags any violation weeks</p>
+    </div>
+    <a href="/capacity" style="font-size:11px;color:#6366f1;font-weight:600;
+                                text-decoration:none;white-space:nowrap">
+      Deep Dive →
+    </a>
+  </div>
+  <div style="padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+    {% for e in capacity_data %}
+    {% set over = e.over_capacity %}
+    <div style="display:flex;align-items:center;gap:12px">
+      <!-- Avatar -->
+      <div style="width:30px;height:30px;border-radius:9px;flex-shrink:0;font-size:11px;
+                  font-weight:800;color:white;display:flex;align-items:center;justify-content:center;
+                  background:{% if over %}linear-gradient(135deg,#f87171,#ef4444)
+                             {% else %}linear-gradient(135deg,#6366f1,#8b5cf6){% endif %}">
+        {{ e.name[0] }}
+      </div>
+      <!-- Name + type -->
+      <div style="width:150px;flex-shrink:0">
+        <p style="font-size:12px;font-weight:600;color:#0f172a;margin:0">{{ e.name }}</p>
+        <p style="font-size:10px;color:#94a3b8;margin:0">{{ e.employee_type }}</p>
+      </div>
+      <!-- Bar -->
+      <div style="flex:1;height:7px;border-radius:4px;background:#e8ecf4;overflow:hidden">
+        <div style="height:100%;border-radius:4px;
+                    width:{{ [e.utilization_pct, 100] | min }}%;
+                    background:{% if over %}linear-gradient(90deg,#f87171,#ef4444)
+                               {% elif e.utilization_pct > 85 %}linear-gradient(90deg,#fbbf24,#f59e0b)
+                               {% else %}linear-gradient(90deg,#6366f1,#8b5cf6){% endif %}">
+        </div>
+      </div>
+      <!-- Stats -->
+      <div style="width:180px;flex-shrink:0;display:flex;align-items:center;gap:8px;justify-content:flex-end">
+        <span style="font-size:11px;color:#64748b">
+          {{ e.avg_weekly_hours }}h / {{ e.allowed_hours_week }}h wk
+        </span>
+        {% if over %}
+        <span class="status-pill" style="background:#fef2f2;color:#dc2626">
+          ⚠ {{ e.violation_weeks }}w over
+        </span>
+        {% else %}
+        <span class="status-pill" style="background:#f0fdf4;color:#16a34a">✓ OK</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ── Project Status — All Active ───────────────────────────────────────────── -->
+<div class="kpi-card" style="padding:0;overflow:hidden">
+  <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;
+              display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <p class="section-title">Project Status — Full Portfolio</p>
+      <p class="section-sub">
+        {{ projects | length }} projects with logged hours &nbsp;·&nbsp;
+        {{ stats.over_budget_projects }} over budget &nbsp;·&nbsp;
+        sorted by hours logged
+      </p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <span class="status-pill" style="background:#fef2f2;color:#dc2626">⚠ Over budget</span>
+      <span class="status-pill" style="background:#fffbeb;color:#b45309">⬆ Near limit</span>
+      <span class="status-pill" style="background:#f0fdf4;color:#16a34a">✓ On track</span>
+    </div>
+  </div>
+  <div style="overflow-x:auto;max-height:480px;overflow-y:auto">
+    <table class="tbl">
+      <thead style="position:sticky;top:0;z-index:2">
+        <tr>
+          <th style="text-align:left">Project</th>
+          <th style="text-align:left">Client</th>
+          <th style="text-align:left">Service</th>
+          <th style="text-align:center;min-width:110px">Budget Progress</th>
+          <th style="text-align:right">Logged</th>
+          <th style="text-align:right">Billed</th>
+          <th style="text-align:center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in projects %}
+        {% set has_budget = p.hours_budget > 0 %}
+        {% set pct = (p.actual_hours / p.hours_budget * 100) | round | int if has_budget else 0 %}
+        {% set over = p.actual_hours > p.hours_budget and has_budget %}
+        {% set near = pct > 80 and not over %}
+        <tr>
+          <td style="font-weight:600;color:#0f172a;max-width:200px">
+            <span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px"
+                  title="{{ p.name }}">{{ p.name }}</span>
+          </td>
+          <td style="color:#64748b;white-space:nowrap">{{ p.client }}</td>
+          <td style="color:#94a3b8;white-space:nowrap;max-width:130px">
+            <span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px">{{ p.service }}</span>
+          </td>
+          <td style="text-align:center">
+            {% if has_budget %}
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+              <div class="progress-track">
+                <div style="height:100%;border-radius:4px;
+                            width:{{ [pct, 100] | min }}%;
+                            background:{% if over %}#ef4444{% elif near %}#f59e0b{% else %}#6366f1{% endif %}">
+                </div>
+              </div>
+              <span style="font-size:10px;font-weight:{% if over or near %}700{% else %}400{% endif %};
+                           color:{% if over %}#dc2626{% elif near %}#b45309{% else %}#94a3b8{% endif %}">
+                {{ pct }}%
+              </span>
+            </div>
+            {% else %}
+            <span style="font-size:10px;color:#cbd5e1">No budget set</span>
+            {% endif %}
+          </td>
+          <td style="text-align:right;font-weight:{% if over %}700{% else %}400{% endif %};
+                     color:{% if over %}#dc2626{% else %}#0f172a{% endif %}">
+            {{ p.actual_hours | int }}h
+          </td>
+          <td style="text-align:right;font-weight:600;color:#0f172a;white-space:nowrap">
+            ${{ "{:,.0f}".format(p.billed_amount) }}
+          </td>
+          <td style="text-align:center">
+            {% if over %}
+              <span class="status-pill" style="background:#fef2f2;color:#dc2626">⚠ Over</span>
+            {% elif near %}
+              <span class="status-pill" style="background:#fffbeb;color:#b45309">⬆ Near</span>
+            {% elif has_budget %}
+              <span class="status-pill" style="background:#f0fdf4;color:#16a34a">✓ OK</span>
+            {% else %}
+              <span class="status-pill" style="background:#f1f5f9;color:#64748b">— T&M</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Charts Script ─────────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  const PURPLE = '#6366f1', VIOLET = '#8b5cf6';
+
+  /* Revenue Trend */
+  (function () {
+    const ctx = document.getElementById('revTrendChart').getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 175);
+    grad.addColorStop(0, 'rgba(99,102,241,0.25)');
+    grad.addColorStop(1, 'rgba(99,102,241,0)');
+    const labels = {{ weekly_trend["labels"] | tojson }};
+    const values = {{ weekly_trend["values"] | tojson }};
+    const avg    = {{ weekly_trend["avg"] }};
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            data: values,
+            borderColor: PURPLE, backgroundColor: grad,
+            borderWidth: 2.5, tension: 0.4, fill: true,
+            pointRadius: 3, pointBackgroundColor: PURPLE,
+            pointHoverRadius: 5,
+          },
+          {
+            data: labels.map(() => avg),
+            borderColor: 'rgba(148,163,184,0.5)',
+            borderDash: [5, 4], borderWidth: 1.5,
+            pointRadius: 0, fill: false,
+            label: 'avg',
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: c => '$' + c.parsed.y.toLocaleString(),
+              afterLabel: c => c.datasetIndex === 0
+                ? (c.parsed.y >= avg ? '▲ above avg' : '▼ below avg') : ''
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } },
+          y: {
+            min: Math.floor(Math.min(...values) * 0.96 / 1000) * 1000,
+            grid: { color: '#f1f5f9' },
+            ticks: { font: { size: 10 }, callback: v => '$' + (v / 1000).toFixed(0) + 'K' }
+          }
+        }
+      }
+    });
+  })();
+
+  /* Revenue by Employee — horizontal bars */
+  (function () {
+    const names    = {{ rev_by_emp | map(attribute='name') | list | tojson }};
+    const revenues = {{ rev_by_emp | map(attribute='revenue') | list | tojson }};
+    const pcts     = {{ rev_by_emp | map(attribute='pct')     | list | tojson }};
+    const alphas   = [0.9, 0.8, 0.7, 0.62, 0.54, 0.46, 0.38, 0.30];
+    new Chart(document.getElementById('revEmpChart'), {
+      type: 'bar',
+      data: {
+        labels: names.map(n => n.split(' ')[0]),   // first name only
+        datasets: [{
+          data: revenues,
+          backgroundColor: alphas.map(a => `rgba(99,102,241,${a})`),
+          borderRadius: 5, borderWidth: 0,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (c, i) => {
+                const idx = c.dataIndex;
+                return `$${revenues[idx].toLocaleString()} · ${pcts[idx]}% of studio`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: '#f1f5f9' },
+            ticks: { font: { size: 10 }, callback: v => '$' + (v / 1000).toFixed(0) + 'K' }
+          },
+          y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+        }
+      }
+    });
+  })();
+})();
+</script>

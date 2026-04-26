@@ -1,0 +1,122 @@
+<!-- ── Date Range Filter Bar ───────────────────────────────────────────────────
+     Context vars required:
+       presets       list[{label, start, end}]
+       active_preset str  (label of selected preset, or "Custom")
+       period_label  str  (human-readable "Apr 27, 2026 – Jul 24, 2026 · ~13w")
+       date_start    str  (YYYY-MM-DD)
+       date_end      str  (YYYY-MM-DD)
+       api_url       str  ("/api/dashboard-data" | "/api/capacity-data")
+       content_id    str  ("dashboard-content"   | "capacity-content")
+────────────────────────────────────────────────────────────────────────────── -->
+<div style="background:white;border-radius:14px;border:1px solid #e2e8f0;
+            box-shadow:0 2px 10px rgba(0,0,0,0.04);
+            padding:12px 18px;margin-bottom:20px">
+
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+
+    <!-- Calendar icon + period label -->
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <span style="font-size:16px">📅</span>
+      <div>
+        <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;
+                  letter-spacing:0.07em;margin:0">Viewing period</p>
+        <p style="font-size:12px;font-weight:600;color:#0f172a;margin:0">{{ period_label }}</p>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div style="width:1px;height:32px;background:#e2e8f0;flex-shrink:0"></div>
+
+    <!-- Preset pills -->
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1">
+      {% for p in presets %}
+      {% set is_active = (p.label == active_preset) %}
+      <button
+        hx-get="{{ api_url }}?start={{ p.start }}&end={{ p.end }}"
+        hx-target="#{{ content_id }}"
+        hx-swap="innerHTML"
+        hx-indicator="#filter-spinner"
+        style="padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;
+               cursor:pointer;border:1px solid;transition:all 0.15s;white-space:nowrap;
+               {% if is_active %}
+               background:#6366f1;color:white;border-color:#6366f1;
+               box-shadow:0 2px 8px rgba(99,102,241,0.35);
+               {% else %}
+               background:#f8fafc;color:#64748b;border-color:#e2e8f0;
+               {% endif %}"
+        onmouseover="if(!this.classList.contains('active')){this.style.borderColor='#6366f1';this.style.color='#6366f1';}"
+        onmouseout="if(!this.classList.contains('active')){this.style.borderColor='#e2e8f0';this.style.color='#64748b';}">
+        {{ p.label }}
+      </button>
+      {% endfor %}
+
+      <!-- Custom toggle -->
+      <button
+        onclick="document.getElementById('custom-range').classList.toggle('hidden')"
+        style="padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;
+               cursor:pointer;border:1px solid;transition:all 0.15s;white-space:nowrap;
+               {% if active_preset == 'Custom' %}
+               background:#6366f1;color:white;border-color:#6366f1;
+               {% else %}
+               background:#f8fafc;color:#64748b;border-color:#e2e8f0;
+               {% endif %}"
+        onmouseover="this.style.borderColor='#6366f1';this.style.color='#6366f1';"
+        onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#64748b';">
+        ✦ Custom
+      </button>
+    </div>
+
+    <!-- Spinner (tiny) -->
+    <div id="filter-spinner" class="htmx-indicator"
+         style="width:16px;height:16px;border-radius:50%;flex-shrink:0;
+                border:2px solid #e2e8f0;border-top-color:#6366f1;
+                animation:spin 0.6s linear infinite">
+    </div>
+    <style>
+      @keyframes spin { to { transform:rotate(360deg); } }
+      .htmx-indicator { opacity:0; transition:opacity 0.2s; }
+      .htmx-request .htmx-indicator,
+      .htmx-request.htmx-indicator { opacity:1 !important; }
+    </style>
+
+  </div><!-- end main row -->
+
+  <!-- Custom date range (hidden by default) -->
+  <div id="custom-range"
+       class="hidden"
+       style="margin-top:12px;padding-top:12px;border-top:1px solid #f1f5f9;
+              display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:600;color:#64748b">From</span>
+    <input id="custom-start" type="date" value="{{ date_start }}"
+           style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;
+                  font-size:12px;color:#0f172a;background:white;cursor:pointer">
+    <span style="font-size:11px;font-weight:600;color:#64748b">To</span>
+    <input id="custom-end" type="date" value="{{ date_end }}"
+           style="padding:5px 10px;border-radius:8px;border:1px solid #e2e8f0;
+                  font-size:12px;color:#0f172a;background:white;cursor:pointer">
+    <button
+      onclick="(function(){
+        var s = document.getElementById('custom-start').value;
+        var e = document.getElementById('custom-end').value;
+        if(!s || !e){ alert('Please choose both dates.'); return; }
+        htmx.ajax('GET', '{{ api_url }}?start=' + s + '&end=' + e,
+                  {target:'#{{ content_id }}', swap:'innerHTML'});
+      })()"
+      style="padding:6px 16px;border-radius:20px;background:#6366f1;color:white;
+             border:none;font-size:11px;font-weight:700;cursor:pointer;
+             box-shadow:0 2px 8px rgba(99,102,241,0.35)">
+      Apply →
+    </button>
+    <button
+      onclick="document.getElementById('custom-range').classList.add('hidden')"
+      style="padding:6px 12px;border-radius:20px;background:#f8fafc;color:#94a3b8;
+             border:1px solid #e2e8f0;font-size:11px;font-weight:600;cursor:pointer">
+      Cancel
+    </button>
+  </div>
+
+</div>
+
+<style>
+  .hidden { display: none !important; }
+</style>

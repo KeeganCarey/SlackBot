@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% set active = "chat" %}
+{% block title %}Ask Your Business{% endblock %}
+
+{% block content %}
+<div style="display:flex;flex-direction:column;height:calc(100vh - 130px);max-width:760px;margin:0 auto">
+
+  <!-- Intro banner -->
+  <div style="border-radius:16px;padding:16px 20px;margin-bottom:18px;
+              background:linear-gradient(135deg,#1e1b4b,#312e81);
+              border:1px solid rgba(167,139,250,0.2);
+              display:flex;gap:14px;align-items:center;flex-shrink:0">
+    <div style="width:40px;height:40px;border-radius:12px;flex-shrink:0;
+                background:rgba(139,92,246,0.25);border:1px solid rgba(167,139,250,0.3);
+                display:flex;align-items:center;justify-content:center;font-size:20px">💬</div>
+    <div>
+      <p style="font-size:12px;font-weight:700;color:#a78bfa;margin:0 0 3px">Ask Your Business Data</p>
+      <p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.5">
+        Ask anything about capacity, budgets, billing & team workload.
+        Gemini reads <strong style="color:#c7d2fe">your real data</strong> and answers in plain English.
+      </p>
+    </div>
+  </div>
+
+  <!-- Suggested chips -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;flex-shrink:0">
+    {% set qs = [
+      "Which employees are over capacity?",
+      "What is our total billed revenue?",
+      "Which projects are over budget?",
+      "Who logs the most hours?",
+      "Which client has the most hours?",
+      "What does Ariana Wolf work on most?",
+    ] %}
+    {% for q in qs %}
+    <button
+      onclick="document.getElementById('chat-input').value = this.dataset.q;
+               document.getElementById('chat-form').dispatchEvent(new Event('submit',{bubbles:true}))"
+      data-q="{{ q }}"
+      style="font-size:11px;font-weight:500;padding:7px 14px;border-radius:20px;border:none;cursor:pointer;
+             background:white;color:#64748b;border:1px solid #e2e8f0;transition:all 0.18s"
+      onmouseover="this.style.background='#ede9fe';this.style.color='#7c3aed';this.style.borderColor='#c4b5fd'"
+      onmouseout="this.style.background='white';this.style.color='#64748b';this.style.borderColor='#e2e8f0'">
+      {{ q }}
+    </button>
+    {% endfor %}
+  </div>
+
+  <!-- Chat history -->
+  <div id="chat-history"
+       style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding-bottom:8px">
+    <div style="text-align:center;padding:40px 0">
+      <div style="width:52px;height:52px;border-radius:16px;margin:0 auto 12px;
+                  background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+                  display:flex;align-items:center;justify-content:center;font-size:22px">💬</div>
+      <p style="font-size:13px;color:#94a3b8;margin:0">Ask your first question below ↓</p>
+    </div>
+  </div>
+
+  <!-- Input bar -->
+  <form id="chat-form"
+    hx-post="/api/chat"
+    hx-target="#chat-history"
+    hx-swap="beforeend"
+    hx-on::after-request="this.reset(); document.getElementById('chat-history').scrollTop = 9e9"
+    style="display:flex;gap:10px;padding-top:14px;border-top:1px solid #e8ecf4;flex-shrink:0;margin-top:8px">
+    <input id="chat-input" name="question" type="text" required
+      placeholder="e.g. Which employees are over their contracted capacity?"
+      style="flex:1;border:1px solid #e2e8f0;border-radius:14px;padding:13px 18px;
+             font-size:13px;outline:none;transition:all 0.2s;background:white;color:#0f172a"
+      onfocus="this.style.borderColor='#a5b4fc';this.style.boxShadow='0 0 0 3px rgba(165,180,252,0.2)'"
+      onblur="this.style.borderColor='#e2e8f0';this.style.boxShadow='none'"/>
+    <button type="submit"
+      style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;
+             padding:13px 22px;border-radius:14px;border:none;cursor:pointer;
+             font-size:13px;font-weight:700;transition:all 0.2s;
+             box-shadow:0 4px 15px rgba(99,102,241,0.35);white-space:nowrap"
+      onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(99,102,241,0.5)'"
+      onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(99,102,241,0.35)'">
+      Ask →
+    </button>
+  </form>
+
+</div>
+{% endblock %}

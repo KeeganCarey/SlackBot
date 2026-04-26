@@ -11,3 +11,11 @@ wheels/
 
 # Secrets
 .env
+
+# Embedded project now tracked as part of this repo
+flight-design-ai_lab/.venv/
+flight-design-ai_lab/__pycache__/
+flight-design-ai_lab/*.pyc
+flight-design-ai_lab/*.db
+flight-design-ai_lab/server.log
+flight-design-ai_lab/.env

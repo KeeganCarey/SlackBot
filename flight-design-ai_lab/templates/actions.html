@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% set active = "actions" %}
+{% block title %}Smart Actions{% endblock %}
+
+{% block content %}
+<div style="max-width:760px;margin:0 auto">
+
+  <!-- Intro -->
+  <div style="border-radius:16px;padding:18px 22px;margin-bottom:28px;
+              background:linear-gradient(135deg,#1e1b4b,#312e81);
+              border:1px solid rgba(167,139,250,0.2);
+              display:flex;gap:14px;align-items:flex-start">
+    <div style="width:44px;height:44px;border-radius:12px;flex-shrink:0;
+                background:rgba(250,204,21,0.15);border:1px solid rgba(250,204,21,0.25);
+                display:flex;align-items:center;justify-content:center;font-size:22px">⚡</div>
+    <div>
+      <p style="font-size:13px;font-weight:700;color:#fde68a;margin:0 0 4px">AI-Powered Smart Actions</p>
+      <p style="font-size:12px;color:#94a3b8;margin:0;line-height:1.6">
+        Click any action below. Gemini reads your real schedule and project data and generates
+        a ready-to-use report. <strong style="color:#c7d2fe">Copy it straight into your email or board doc.</strong>
+      </p>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px">
+
+    <!-- ── NEW: Project Risk & Staff Rebalancing ─────────────────────────── -->
+    <div style="background:white;border-radius:18px;border:2px solid #fca5a5;
+                box-shadow:0 4px 24px rgba(239,68,68,0.12);overflow:hidden">
+      <div style="background:linear-gradient(135deg,#fef2f2,#fff7f7);
+                  padding:12px 24px;border-bottom:1px solid #fecaca">
+        <span style="font-size:10px;font-weight:800;color:#dc2626;text-transform:uppercase;
+                     letter-spacing:0.08em">🔴 Actionable</span>
+      </div>
+      <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:14px;flex-shrink:0;
+                      background:linear-gradient(135deg,#dc2626,#b91c1c);
+                      display:flex;align-items:center;justify-content:center;font-size:22px;
+                      box-shadow:0 4px 14px rgba(220,38,38,0.35)">🔁</div>
+          <div>
+            <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin:0">Project Risk &amp; Staff Rebalancing</h3>
+            <p style="font-size:11px;color:#64748b;margin:3px 0 0">
+              Identifies at-risk projects · finds who has free capacity this week · recommends specific reassignments
+            </p>
+          </div>
+        </div>
+        <button
+          hx-post="/api/action/project-risk"
+          hx-target="#result-project-risk"
+          hx-swap="innerHTML"
+          hx-indicator="#spin-project-risk"
+          style="background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;
+                 padding:10px 20px;border-radius:12px;border:none;cursor:pointer;
+                 font-size:12px;font-weight:700;transition:all 0.2s;
+                 box-shadow:0 4px 14px rgba(220,38,38,0.35);
+                 display:flex;align-items:center;gap:8px;white-space:nowrap"
+          onmouseover="this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.transform='none'">
+          <span id="spin-project-risk" class="htmx-indicator" style="display:none">⏳</span>
+          Analyse Now →
+        </button>
+      </div>
+      <div id="result-project-risk" style="padding:0 24px 0"></div>
+    </div>
+
+    <!-- ── NEW: Budget Overrun Client Emails ─────────────────────────────── -->
+    <div style="background:white;border-radius:18px;border:2px solid #fed7aa;
+                box-shadow:0 4px 24px rgba(245,158,11,0.12);overflow:hidden">
+      <div style="background:linear-gradient(135deg,#fffbeb,#fffef7);
+                  padding:12px 24px;border-bottom:1px solid #fde68a">
+        <span style="font-size:10px;font-weight:800;color:#b45309;text-transform:uppercase;
+                     letter-spacing:0.08em">✉️ Client Communication</span>
+      </div>
+      <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:14px;flex-shrink:0;
+                      background:linear-gradient(135deg,#f59e0b,#d97706);
+                      display:flex;align-items:center;justify-content:center;font-size:22px;
+                      box-shadow:0 4px 14px rgba(245,158,11,0.35)">📧</div>
+          <div>
+            <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin:0">Budget Overrun Client Emails</h3>
+            <p style="font-size:11px;color:#64748b;margin:3px 0 0">
+              For every project exceeding its hours budget · drafts a warm, professional email
+              with exact numbers and 3 resolution options
+            </p>
+          </div>
+        </div>
+        <button
+          hx-post="/api/action/budget-overrun"
+          hx-target="#result-budget-overrun"
+          hx-swap="innerHTML"
+          hx-indicator="#spin-budget-overrun"
+          style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;
+                 padding:10px 20px;border-radius:12px;border:none;cursor:pointer;
+                 font-size:12px;font-weight:700;transition:all 0.2s;
+                 box-shadow:0 4px 14px rgba(245,158,11,0.35);
+                 display:flex;align-items:center;gap:8px;white-space:nowrap"
+          onmouseover="this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.transform='none'">
+          <span id="spin-budget-overrun" class="htmx-indicator" style="display:none">⏳</span>
+          Draft Emails →
+        </button>
+      </div>
+      <div id="result-budget-overrun" style="padding:0 24px 0"></div>
+    </div>
+
+    <!-- ── Divider ─────────────────────────────────────────────────────────── -->
+    <div style="display:flex;align-items:center;gap:12px;padding:0 4px">
+      <div style="flex:1;height:1px;background:#e2e8f0"></div>
+      <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em">Other AI Reports</span>
+      <div style="flex:1;height:1px;background:#e2e8f0"></div>
+    </div>
+
+    <!-- Weekly Briefing -->
+    <div style="background:white;border-radius:18px;border:1px solid #e8ecf4;
+                box-shadow:0 2px 16px rgba(0,0,0,0.06);overflow:hidden">
+      <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:14px;flex-shrink:0;
+                      background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                      display:flex;align-items:center;justify-content:center;font-size:22px;
+                      box-shadow:0 4px 14px rgba(99,102,241,0.35)">📅</div>
+          <div>
+            <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin:0">Weekly Briefing</h3>
+            <p style="font-size:11px;color:#94a3b8;margin:3px 0 0">
+              Top 3 priorities · capacity alerts · revenue snapshot · budget risks
+            </p>
+          </div>
+        </div>
+        <button
+          hx-post="/api/action/briefing"
+          hx-target="#result-briefing"
+          hx-swap="innerHTML"
+          hx-indicator="#spin-briefing"
+          style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;
+                 padding:10px 20px;border-radius:12px;border:none;cursor:pointer;
+                 font-size:12px;font-weight:700;transition:all 0.2s;
+                 box-shadow:0 4px 14px rgba(99,102,241,0.35);
+                 display:flex;align-items:center;gap:8px;white-space:nowrap"
+          onmouseover="this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.transform='none'">
+          <span id="spin-briefing" class="htmx-indicator" style="display:none">⏳</span>
+          Generate →
+        </button>
+      </div>
+      <div id="result-briefing" style="padding:0 24px 0"></div>
+    </div>
+
+    <!-- Capacity Violation Report -->
+    <div style="background:white;border-radius:18px;border:1px solid #fecaca;
+                box-shadow:0 2px 16px rgba(239,68,68,0.08);overflow:hidden">
+      <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:14px;flex-shrink:0;
+                      background:linear-gradient(135deg,#ef4444,#dc2626);
+                      display:flex;align-items:center;justify-content:center;font-size:22px;
+                      box-shadow:0 4px 14px rgba(239,68,68,0.35)">⚠️</div>
+          <div>
+            <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin:0">Capacity Violation Report</h3>
+            <p style="font-size:11px;color:#94a3b8;margin:3px 0 0">
+              Who is overextended · how many hours over · recommended action
+            </p>
+          </div>
+        </div>
+        <button
+          hx-post="/api/action/capacity-report"
+          hx-target="#result-capacity"
+          hx-swap="innerHTML"
+          hx-indicator="#spin-capacity"
+          style="background:linear-gradient(135deg,#ef4444,#dc2626);color:white;
+                 padding:10px 20px;border-radius:12px;border:none;cursor:pointer;
+                 font-size:12px;font-weight:700;transition:all 0.2s;
+                 box-shadow:0 4px 14px rgba(239,68,68,0.35);
+                 display:flex;align-items:center;gap:8px;white-space:nowrap"
+          onmouseover="this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.transform='none'">
+          <span id="spin-capacity" class="htmx-indicator" style="display:none">⏳</span>
+          Run Report →
+        </button>
+      </div>
+      <div id="result-capacity" style="padding:0 24px 0"></div>
+    </div>
+
+    <!-- Project Budget Status -->
+    <div style="background:white;border-radius:18px;border:1px solid #fed7aa;
+                box-shadow:0 2px 16px rgba(245,158,11,0.08);overflow:hidden">
+      <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:14px;flex-shrink:0;
+                      background:linear-gradient(135deg,#f59e0b,#d97706);
+                      display:flex;align-items:center;justify-content:center;font-size:22px;
+                      box-shadow:0 4px 14px rgba(245,158,11,0.35)">🧾</div>
+          <div>
+            <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin:0">Project Budget Status</h3>
+            <p style="font-size:11px;color:#94a3b8;margin:3px 0 0">
+              Over-budget projects · cost impact estimate · at-risk client relationships
+            </p>
+          </div>
+        </div>
+        <button
+          hx-post="/api/action/budget-report"
+          hx-target="#result-budget"
+          hx-swap="innerHTML"
+          hx-indicator="#spin-budget"
+          style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;
+                 padding:10px 20px;border-radius:12px;border:none;cursor:pointer;
+                 font-size:12px;font-weight:700;transition:all 0.2s;
+                 box-shadow:0 4px 14px rgba(245,158,11,0.35);
+                 display:flex;align-items:center;gap:8px;white-space:nowrap"
+          onmouseover="this.style.transform='translateY(-1px)'"
+          onmouseout="this.style.transform='none'">
+          <span id="spin-budget" class="htmx-indicator" style="display:none">⏳</span>
+          Run Report →
+        </button>
+      </div>
+      <div id="result-budget" style="padding:0 24px 0"></div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
